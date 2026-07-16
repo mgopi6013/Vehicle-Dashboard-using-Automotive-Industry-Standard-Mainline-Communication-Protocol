@@ -1,22 +1,13 @@
 #include <lpc21xx.h>
-#include "lcd.c"
+#include "4bitlcd.h"
 #include "can.c"
-#define SW 3
+#define SW 10
 CAN2_MSG rx;
 unsigned char temperature = 0;
 unsigned char fuel = 0;
 int r = 0;
 int dir = 1;
 int x = (1000 * 60) - 1;
-
-void delay_ms(unsigned int ms)
-{
-    T0PR = 60000 - 1;
-    T0TCR = 0x01;
-    while(T0TC < ms);
-    T0TCR = 0x03;
-    T0TCR = 0x00;
-}
 
 void pwm_init(void)
 {
@@ -35,14 +26,15 @@ int main()
     LCD_INIT();
     pwm_init();
     can2_init();
-LCD_COMMAND(0x01);
-LCD_COMMAND(0x80);
+//LCD_SCROLL_RL("Vehicle Dashboard Using Automotive Industry Standard Mainline communication Protocol");
+LCD_CMD(0x01);
+LCD_CMD(0x80);
 LCD_STR("Vehicle Dashboard");
-LCD_COMMAND(0xC0);
+LCD_CMD(0xC0);
 LCD_STR("Using Automotive");
-LCD_COMMAND(0x94);
+LCD_CMD(0x94);
 LCD_STR("Industry Standard");
-LCD_COMMAND(0xD4);
+LCD_CMD(0xD4);
 LCD_STR("CAN Protocol");
 delay_ms(3000);
 	
@@ -97,23 +89,23 @@ delay_ms(3000);
             }
         }
 /* LCD Display */
-LCD_COMMAND(0x01);
+LCD_CMD(0x01);
 /* Line 1 */
-LCD_COMMAND(0x80);
+LCD_CMD(0x80);
 LCD_STR("CAR DASHBOARD");
 /* Line 2 */
-LCD_COMMAND(0xC0);
+LCD_CMD(0xC0);
 LCD_STR("Temp : ");
-LCD_INTEGER(temperature);
+LCD_INT(temperature);
 LCD_DATA(0xDF);      // Degree symbol (optional)
 LCD_DATA('C');
 /* Line 3 */
-LCD_COMMAND(0x94);
+LCD_CMD(0x94);
 LCD_STR("Fuel : ");
-LCD_INTEGER(fuel);
+LCD_INT(fuel);
 LCD_DATA('%');
 /* Line 4 */
-LCD_COMMAND(0xD4);
+LCD_CMD(0xD4);
 LCD_STR("Wiper: ");
 if(r)
     LCD_STR("ON ");
