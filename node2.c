@@ -1,5 +1,6 @@
 #include <lpc21xx.h>
 #include "can.c"
+#include"4bitlcd.h"
 #define mode3      0x18
 #define master_bit 5
 #define CS         7
